@@ -2869,7 +2869,39 @@ function run() {
               : '弱运遇阻，此时宜蛰伏修炼，切勿冒进，守住基本盘，待运势回升再发力。' },
   };
   const dv = DIVINATION_VERDICT[overall] || DIVINATION_VERDICT.warn;
+  // 起卦时刻：当下时辰的干支（用于"卦象"展示）
+  const _castDayGZ = dayGZ(now.getFullYear(), now.getMonth() + 1, now.getDate());
+  const _castHourGZ = hourGZ(now.getHours(), _castDayGZ.si);
+  const _castTimeStr = now.getFullYear() + '年' + (now.getMonth() + 1) + '月' + now.getDate() + '日 ' +
+    String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
+  const _castGZStr = _castDayGZ.s + _castDayGZ.b + '日 ' + _castHourGZ.s + _castHourGZ.b + '时';
+  const _natalGZStr = yGZ.s + yGZ.b + '·' + mGZ.s + mGZ.b + '·' + dGZ.s + dGZ.b + '·' + hGZ.s + hGZ.b;
+
+  // 卦象牌（先报卦，再解读）
+  const castCard =
+    '<div style="margin-bottom:10px;padding:14px 18px;background:rgba(255,255,255,.55);border:1px solid rgba(139,98,0,.22);border-radius:8px">' +
+      '<div style="color:#7a4f00;font-size:.82em;letter-spacing:.18em;margin-bottom:9px;text-align:center">📜 此 刻 所 摇 之 卦</div>' +
+      '<div style="display:flex;flex-wrap:wrap;gap:6px 16px;font-size:.84em;color:#5a3a00;line-height:1.9">' +
+        '<div><span style="color:#9a7640">起卦时刻　</span>' + _castTimeStr + '</div>' +
+        '<div><span style="color:#9a7640">天时干支　</span><strong style="color:#7a4f00;letter-spacing:.05em">' + _castGZStr + '</strong></div>' +
+        '<div><span style="color:#9a7640">节气　</span>' + termName + '</div>' +
+        '<div><span style="color:#9a7640">奇门时局　</span><strong style="color:#7a4f00">' + (yang ? '阳遁' : '阴遁') + ju + '局</strong></div>' +
+      '</div>' +
+      '<hr style="border:none;border-top:1px dashed rgba(139,98,0,.18);margin:10px 0">' +
+      '<div style="font-size:.84em;color:#5a3a00;line-height:1.9">' +
+        '<span style="color:#9a7640">叠合命盘　</span>' +
+        '<span style="letter-spacing:.05em">' + _natalGZStr + '</span>' +
+        '<span style="color:#9a7640">　日主　</span>' +
+        '<strong style="color:#7a4f00">' + dGZ.s + '（' + de + '，' + strengthLabel + '）</strong>' +
+        '<span style="color:#9a7640">　用神　</span>' +
+        '<strong class="' + wxClass(yongShen.yong) + '">' + yongShen.yong + '</strong>' +
+      '</div>' +
+    '</div>';
+
+  // 卦象解读（结论 + 一句话）
   const divinationBanner =
+    castCard +
+    '<div style="text-align:center;color:#b8860b;font-size:.72em;letter-spacing:.3em;margin:8px 0 10px">— 卦 象 解 读 —</div>' +
     '<div style="margin-bottom:14px;padding:14px 18px;background:' + dv.bg + ';border:1px solid ' + dv.border + ';border-radius:8px;display:flex;align-items:flex-start;gap:14px">' +
       '<div style="font-size:1.6em;flex-shrink:0;padding-top:2px">🔮</div>' +
       '<div>' +
